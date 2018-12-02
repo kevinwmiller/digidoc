@@ -1,4 +1,4 @@
-#!bin/sh
+#!/bin/sh
 PROTOBUF_VERSION=3.3.0
 PROTOC_FILENAME=protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
 
