@@ -2,9 +2,11 @@ module github.com/kevinwmiller/digidoc
 
 require (
 	cloud.google.com/go v0.33.1 // indirect
+	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/golang/lint v0.0.0-20181026193005-c67002cb31c3 // indirect
 	github.com/golang/protobuf v1.2.0
 	github.com/hashicorp/go-hclog v0.0.0-20181001195459-61d530d6c27f // indirect
+	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/mitchellh/cli v1.0.0
 	github.com/posener/complete v1.2.1 // indirect
 	golang.org/x/lint v0.0.0-20181026193005-c67002cb31c3 // indirect
