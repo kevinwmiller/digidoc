@@ -8,11 +8,13 @@ var Commands map[string]cli.CommandFactory
 
 func registerCommands() {
 	Commands = map[string]cli.CommandFactory{}
-	register((ServerCommand{}).RegisterCommands())
+
+	// Register commands here
+	register((&ServerCommand{}).RegisterCommands())
 }
 
 func register(commands map[string]cli.CommandFactory) {
 	for k, v := range commands {
-	    Commands[k] = v
+		Commands[k] = v
 	}
 }

@@ -8,10 +8,10 @@ OUTPUT_DIR=build
 BINARY_NAME=digidoc
 TARGET=$(OUTPUT_DIR)/$(BINARY_NAME)
 
-all: test build
+all: build test
 .PHONY: build
 build:
-	protoc -I server/ server/digidoc.proto --go_out=plugins=grpc:server
+	protoc -I grpc/ grpc/digidoc.proto --go_out=plugins=grpc:grpc
 	$(GOBUILD) -o $(TARGET) -v
 test:
 	$(GOTEST) -v ./...
@@ -20,7 +20,8 @@ clean:
 	rm -f $(TARGET)
 run:
 	$(GOBUILD) -o $(TARGET) -v
-	./$(TARGET)
+	./$(TARGET) server start
 deps:
+	$(GOGET)
 	$(GOGET) google.golang.org/grpc
 	$(GOGET) github.com/golang/protobuf/protoc-gen-go

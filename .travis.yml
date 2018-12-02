@@ -4,3 +4,7 @@ go:
   - "1.11.1"
 
 go_import_path: github.com/kevinwmiller/digidoc
+
+before_script:
+  - make deps
+  
