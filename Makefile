@@ -22,6 +22,6 @@ run:
 	$(GOBUILD) -o $(TARGET) -v
 	./$(TARGET) server start
 deps:
-	$(GOGET)
-	$(GOGET) google.golang.org/grpc
 	$(GOGET) github.com/golang/protobuf/protoc-gen-go
+	protoc -I grpc/ grpc/digidoc.proto --go_out=plugins=grpc:grpc
+	$(GOGET)
