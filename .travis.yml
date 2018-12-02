@@ -6,5 +6,4 @@ go:
 go_import_path: github.com/kevinwmiller/digidoc
 
 before_script:
-  - make deps
-  
+  - env GO111MODULE=on make deps

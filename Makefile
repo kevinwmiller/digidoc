@@ -22,7 +22,6 @@ run:
 	$(GOBUILD) -o $(TARGET) -v
 	./$(TARGET) server start
 deps:
-	export GO111MODULE=on
 	$(GOGET)
 	$(GOGET) google.golang.org/grpc
 	$(GOGET) github.com/golang/protobuf/protoc-gen-go
