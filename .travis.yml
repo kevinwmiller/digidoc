@@ -10,22 +10,8 @@ branches:
   - master
   - development
 
-stages:
-  - setup
-  - compile
-  - test
-
 env:
   - GO111MODULE=on 
 
-jobs:
-  include:
-    - stage: "setup"
-      name: "setup"
-      script: make deps
-    - stage: "compile"
-      name: "compile"
-      script: make build
-    - stage: "tests"
-      name: "tests"
-      script: make test
+before_script:
+  - make deps
