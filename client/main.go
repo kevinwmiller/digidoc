@@ -13,6 +13,9 @@ const (
 	address = "localhost:3000"
 )
 
+type DigidocClient struct {}
+func (c *DigidocClient) Upload
+
 func main() {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
