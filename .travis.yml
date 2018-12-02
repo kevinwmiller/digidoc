@@ -13,5 +13,8 @@ branches:
 env:
   - GO111MODULE=on 
 
+before_install:
+  - ./vet.sh
+
 before_script:
   - make deps
