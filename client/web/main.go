@@ -35,5 +35,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Uuid: ", r.Uuid)
+	log.Printf("Uuid: %d", r.Uuid)
 }
