@@ -23,11 +23,38 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
+type UploadStatusCode int32
+
+const (
+	UploadStatusCode_Unknown UploadStatusCode = 0
+	UploadStatusCode_Ok      UploadStatusCode = 1
+	UploadStatusCode_Failed  UploadStatusCode = 2
+)
+
+var UploadStatusCode_name = map[int32]string{
+	0: "Unknown",
+	1: "Ok",
+	2: "Failed",
+}
+var UploadStatusCode_value = map[string]int32{
+	"Unknown": 0,
+	"Ok":      1,
+	"Failed":  2,
+}
+
+func (x UploadStatusCode) String() string {
+	return proto.EnumName(UploadStatusCode_name, int32(x))
+}
+func (UploadStatusCode) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_digidoc_bacc4ff9e52ccc57, []int{0}
+}
+
 // Upload
 type UploadMetaData struct {
 	Name                 string   `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Tags                 []string `protobuf:"bytes,4,rep,name=tags,proto3" json:"tags,omitempty"`
-	ParentPath           string   `protobuf:"bytes,5,opt,name=parent_path,json=parentPath,proto3" json:"parent_path,omitempty"`
+	ParentPath           string   `protobuf:"bytes,5,opt,name=parentPath,proto3" json:"parentPath,omitempty"`
+	FileType             string   `protobuf:"bytes,6,opt,name=fileType,proto3" json:"fileType,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -37,7 +64,7 @@ func (m *UploadMetaData) Reset()         { *m = UploadMetaData{} }
 func (m *UploadMetaData) String() string { return proto.CompactTextString(m) }
 func (*UploadMetaData) ProtoMessage()    {}
 func (*UploadMetaData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_digidoc_2ebdefbef1b2b87a, []int{0}
+	return fileDescriptor_digidoc_bacc4ff9e52ccc57, []int{0}
 }
 func (m *UploadMetaData) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UploadMetaData.Unmarshal(m, b)
@@ -78,7 +105,14 @@ func (m *UploadMetaData) GetParentPath() string {
 	return ""
 }
 
-type UploadRequest struct {
+func (m *UploadMetaData) GetFileType() string {
+	if m != nil {
+		return m.FileType
+	}
+	return ""
+}
+
+type UploadChunk struct {
 	Data                 []byte          `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	MetaData             *UploadMetaData `protobuf:"bytes,2,opt,name=metaData,proto3" json:"metaData,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
@@ -86,80 +120,88 @@ type UploadRequest struct {
 	XXX_sizecache        int32           `json:"-"`
 }
 
-func (m *UploadRequest) Reset()         { *m = UploadRequest{} }
-func (m *UploadRequest) String() string { return proto.CompactTextString(m) }
-func (*UploadRequest) ProtoMessage()    {}
-func (*UploadRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_digidoc_2ebdefbef1b2b87a, []int{1}
+func (m *UploadChunk) Reset()         { *m = UploadChunk{} }
+func (m *UploadChunk) String() string { return proto.CompactTextString(m) }
+func (*UploadChunk) ProtoMessage()    {}
+func (*UploadChunk) Descriptor() ([]byte, []int) {
+	return fileDescriptor_digidoc_bacc4ff9e52ccc57, []int{1}
 }
-func (m *UploadRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_UploadRequest.Unmarshal(m, b)
+func (m *UploadChunk) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UploadChunk.Unmarshal(m, b)
 }
-func (m *UploadRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_UploadRequest.Marshal(b, m, deterministic)
+func (m *UploadChunk) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UploadChunk.Marshal(b, m, deterministic)
 }
-func (dst *UploadRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_UploadRequest.Merge(dst, src)
+func (dst *UploadChunk) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UploadChunk.Merge(dst, src)
 }
-func (m *UploadRequest) XXX_Size() int {
-	return xxx_messageInfo_UploadRequest.Size(m)
+func (m *UploadChunk) XXX_Size() int {
+	return xxx_messageInfo_UploadChunk.Size(m)
 }
-func (m *UploadRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_UploadRequest.DiscardUnknown(m)
+func (m *UploadChunk) XXX_DiscardUnknown() {
+	xxx_messageInfo_UploadChunk.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_UploadRequest proto.InternalMessageInfo
+var xxx_messageInfo_UploadChunk proto.InternalMessageInfo
 
-func (m *UploadRequest) GetData() []byte {
+func (m *UploadChunk) GetData() []byte {
 	if m != nil {
 		return m.Data
 	}
 	return nil
 }
 
-func (m *UploadRequest) GetMetaData() *UploadMetaData {
+func (m *UploadChunk) GetMetaData() *UploadMetaData {
 	if m != nil {
 		return m.MetaData
 	}
 	return nil
 }
 
-type UploadResponse struct {
-	Uuid                 uint64   `protobuf:"fixed64,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+type UploadStatus struct {
+	Message              string           `protobuf:"bytes,1,opt,name=Message,proto3" json:"Message,omitempty"`
+	Code                 UploadStatusCode `protobuf:"varint,2,opt,name=Code,proto3,enum=grpc.UploadStatusCode" json:"Code,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *UploadResponse) Reset()         { *m = UploadResponse{} }
-func (m *UploadResponse) String() string { return proto.CompactTextString(m) }
-func (*UploadResponse) ProtoMessage()    {}
-func (*UploadResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_digidoc_2ebdefbef1b2b87a, []int{2}
+func (m *UploadStatus) Reset()         { *m = UploadStatus{} }
+func (m *UploadStatus) String() string { return proto.CompactTextString(m) }
+func (*UploadStatus) ProtoMessage()    {}
+func (*UploadStatus) Descriptor() ([]byte, []int) {
+	return fileDescriptor_digidoc_bacc4ff9e52ccc57, []int{2}
 }
-func (m *UploadResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_UploadResponse.Unmarshal(m, b)
+func (m *UploadStatus) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UploadStatus.Unmarshal(m, b)
 }
-func (m *UploadResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_UploadResponse.Marshal(b, m, deterministic)
+func (m *UploadStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UploadStatus.Marshal(b, m, deterministic)
 }
-func (dst *UploadResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_UploadResponse.Merge(dst, src)
+func (dst *UploadStatus) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UploadStatus.Merge(dst, src)
 }
-func (m *UploadResponse) XXX_Size() int {
-	return xxx_messageInfo_UploadResponse.Size(m)
+func (m *UploadStatus) XXX_Size() int {
+	return xxx_messageInfo_UploadStatus.Size(m)
 }
-func (m *UploadResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_UploadResponse.DiscardUnknown(m)
+func (m *UploadStatus) XXX_DiscardUnknown() {
+	xxx_messageInfo_UploadStatus.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_UploadResponse proto.InternalMessageInfo
+var xxx_messageInfo_UploadStatus proto.InternalMessageInfo
 
-func (m *UploadResponse) GetUuid() uint64 {
+func (m *UploadStatus) GetMessage() string {
 	if m != nil {
-		return m.Uuid
+		return m.Message
 	}
-	return 0
+	return ""
+}
+
+func (m *UploadStatus) GetCode() UploadStatusCode {
+	if m != nil {
+		return m.Code
+	}
+	return UploadStatusCode_Unknown
 }
 
 // Browse
@@ -173,7 +215,7 @@ func (m *BrowseRequest) Reset()         { *m = BrowseRequest{} }
 func (m *BrowseRequest) String() string { return proto.CompactTextString(m) }
 func (*BrowseRequest) ProtoMessage()    {}
 func (*BrowseRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_digidoc_2ebdefbef1b2b87a, []int{3}
+	return fileDescriptor_digidoc_bacc4ff9e52ccc57, []int{3}
 }
 func (m *BrowseRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_BrowseRequest.Unmarshal(m, b)
@@ -203,7 +245,7 @@ func (m *BrowseResponse) Reset()         { *m = BrowseResponse{} }
 func (m *BrowseResponse) String() string { return proto.CompactTextString(m) }
 func (*BrowseResponse) ProtoMessage()    {}
 func (*BrowseResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_digidoc_2ebdefbef1b2b87a, []int{4}
+	return fileDescriptor_digidoc_bacc4ff9e52ccc57, []int{4}
 }
 func (m *BrowseResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_BrowseResponse.Unmarshal(m, b)
@@ -225,10 +267,11 @@ var xxx_messageInfo_BrowseResponse proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*UploadMetaData)(nil), "grpc.UploadMetaData")
-	proto.RegisterType((*UploadRequest)(nil), "grpc.UploadRequest")
-	proto.RegisterType((*UploadResponse)(nil), "grpc.UploadResponse")
+	proto.RegisterType((*UploadChunk)(nil), "grpc.UploadChunk")
+	proto.RegisterType((*UploadStatus)(nil), "grpc.UploadStatus")
 	proto.RegisterType((*BrowseRequest)(nil), "grpc.BrowseRequest")
 	proto.RegisterType((*BrowseResponse)(nil), "grpc.BrowseResponse")
+	proto.RegisterEnum("grpc.UploadStatusCode", UploadStatusCode_name, UploadStatusCode_value)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -243,7 +286,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type DigiDocClient interface {
-	Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error)
+	Upload(ctx context.Context, opts ...grpc.CallOption) (DigiDoc_UploadClient, error)
 	Browse(ctx context.Context, in *BrowseRequest, opts ...grpc.CallOption) (*BrowseResponse, error)
 }
 
@@ -255,13 +298,38 @@ func NewDigiDocClient(cc *grpc.ClientConn) DigiDocClient {
 	return &digiDocClient{cc}
 }
 
-func (c *digiDocClient) Upload(ctx context.Context, in *UploadRequest, opts ...grpc.CallOption) (*UploadResponse, error) {
-	out := new(UploadResponse)
-	err := c.cc.Invoke(ctx, "/grpc.DigiDoc/Upload", in, out, opts...)
+func (c *digiDocClient) Upload(ctx context.Context, opts ...grpc.CallOption) (DigiDoc_UploadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_DigiDoc_serviceDesc.Streams[0], "/grpc.DigiDoc/Upload", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &digiDocUploadClient{stream}
+	return x, nil
+}
+
+type DigiDoc_UploadClient interface {
+	Send(*UploadChunk) error
+	CloseAndRecv() (*UploadStatus, error)
+	grpc.ClientStream
+}
+
+type digiDocUploadClient struct {
+	grpc.ClientStream
+}
+
+func (x *digiDocUploadClient) Send(m *UploadChunk) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *digiDocUploadClient) CloseAndRecv() (*UploadStatus, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(UploadStatus)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func (c *digiDocClient) Browse(ctx context.Context, in *BrowseRequest, opts ...grpc.CallOption) (*BrowseResponse, error) {
@@ -275,7 +343,7 @@ func (c *digiDocClient) Browse(ctx context.Context, in *BrowseRequest, opts ...g
 
 // DigiDocServer is the server API for DigiDoc service.
 type DigiDocServer interface {
-	Upload(context.Context, *UploadRequest) (*UploadResponse, error)
+	Upload(DigiDoc_UploadServer) error
 	Browse(context.Context, *BrowseRequest) (*BrowseResponse, error)
 }
 
@@ -283,22 +351,30 @@ func RegisterDigiDocServer(s *grpc.Server, srv DigiDocServer) {
 	s.RegisterService(&_DigiDoc_serviceDesc, srv)
 }
 
-func _DigiDoc_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadRequest)
-	if err := dec(in); err != nil {
+func _DigiDoc_Upload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(DigiDocServer).Upload(&digiDocUploadServer{stream})
+}
+
+type DigiDoc_UploadServer interface {
+	SendAndClose(*UploadStatus) error
+	Recv() (*UploadChunk, error)
+	grpc.ServerStream
+}
+
+type digiDocUploadServer struct {
+	grpc.ServerStream
+}
+
+func (x *digiDocUploadServer) SendAndClose(m *UploadStatus) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *digiDocUploadServer) Recv() (*UploadChunk, error) {
+	m := new(UploadChunk)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
-	if interceptor == nil {
-		return srv.(DigiDocServer).Upload(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/grpc.DigiDoc/Upload",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DigiDocServer).Upload(ctx, req.(*UploadRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	return m, nil
 }
 
 func _DigiDoc_Browse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -324,36 +400,43 @@ var _DigiDoc_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*DigiDocServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Upload",
-			Handler:    _DigiDoc_Upload_Handler,
-		},
-		{
 			MethodName: "Browse",
 			Handler:    _DigiDoc_Browse_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Upload",
+			Handler:       _DigiDoc_Upload_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "digidoc.proto",
 }
 
-func init() { proto.RegisterFile("digidoc.proto", fileDescriptor_digidoc_2ebdefbef1b2b87a) }
+func init() { proto.RegisterFile("digidoc.proto", fileDescriptor_digidoc_bacc4ff9e52ccc57) }
 
-var fileDescriptor_digidoc_2ebdefbef1b2b87a = []byte{
-	// 255 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x54, 0x91, 0x41, 0x4b, 0xc4, 0x30,
-	0x14, 0x84, 0xb7, 0x6e, 0xad, 0xfa, 0xd6, 0xae, 0x12, 0xf7, 0x10, 0xbc, 0x58, 0x82, 0x87, 0x9e,
-	0x8a, 0xac, 0xf8, 0x07, 0xa4, 0x57, 0x41, 0x02, 0x7b, 0xf0, 0x24, 0xcf, 0x26, 0x74, 0x03, 0x6e,
-	0x13, 0x9b, 0x94, 0xfe, 0x7d, 0x49, 0xd2, 0x8a, 0xbd, 0x0d, 0xc3, 0xfb, 0x66, 0x06, 0x1e, 0xe4,
-	0x42, 0xb5, 0x4a, 0xe8, 0xa6, 0x32, 0xbd, 0x76, 0x9a, 0xa4, 0x6d, 0x6f, 0x1a, 0xf6, 0x01, 0xdb,
-	0x83, 0xf9, 0xd6, 0x28, 0xde, 0xa4, 0xc3, 0x1a, 0x1d, 0x12, 0x02, 0x69, 0x87, 0x27, 0x49, 0xd7,
-	0x45, 0x52, 0x5e, 0xf1, 0xa0, 0xbd, 0xe7, 0xb0, 0xb5, 0x34, 0x2d, 0xd6, 0xde, 0xf3, 0x9a, 0x3c,
-	0xc0, 0xc6, 0x60, 0x2f, 0x3b, 0xf7, 0x69, 0xd0, 0x1d, 0xe9, 0x79, 0x38, 0x87, 0x68, 0xbd, 0xa3,
-	0x3b, 0xb2, 0x03, 0xe4, 0x31, 0x9a, 0xcb, 0x9f, 0x41, 0x5a, 0xe7, 0x53, 0x04, 0x3a, 0xa4, 0x49,
-	0x91, 0x94, 0xd7, 0x3c, 0x68, 0xf2, 0x04, 0x97, 0xa7, 0xa9, 0x99, 0x9e, 0x15, 0x49, 0xb9, 0xd9,
-	0xef, 0x2a, 0x3f, 0xac, 0x5a, 0xae, 0xe2, 0x7f, 0x57, 0xec, 0x71, 0x5e, 0xcc, 0xa5, 0x35, 0xba,
-	0xb3, 0x61, 0xdd, 0x30, 0x28, 0x11, 0x72, 0x33, 0x1e, 0x34, 0xbb, 0x81, 0xfc, 0xb5, 0xd7, 0xa3,
-	0x95, 0x53, 0x39, 0xbb, 0x85, 0xed, 0x6c, 0x44, 0x6c, 0x3f, 0xc2, 0x45, 0xad, 0x5a, 0x55, 0xeb,
-	0x86, 0xbc, 0x40, 0x16, 0x33, 0xc9, 0xdd, 0xff, 0xf6, 0x89, 0xbd, 0xdf, 0x2d, 0xcd, 0xc8, 0xb3,
-	0x95, 0xc7, 0x62, 0xe6, 0x8c, 0x2d, 0x2a, 0x67, 0x6c, 0x59, 0xcb, 0x56, 0x5f, 0x59, 0x78, 0xc0,
-	0xf3, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x91, 0x2c, 0xcf, 0xaf, 0x91, 0x01, 0x00, 0x00,
+var fileDescriptor_digidoc_bacc4ff9e52ccc57 = []byte{
+	// 329 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x64, 0x91, 0x4f, 0x4f, 0xc2, 0x40,
+	0x10, 0xc5, 0x29, 0xd4, 0x02, 0xc3, 0x1f, 0xeb, 0x48, 0x4c, 0xc3, 0xc1, 0x34, 0x7b, 0x6a, 0x38,
+	0x10, 0x03, 0xf1, 0x0b, 0x08, 0xf1, 0x46, 0x34, 0x05, 0x3e, 0xc0, 0x4a, 0xc7, 0xd2, 0x00, 0xbb,
+	0xb5, 0xbb, 0x0d, 0xf1, 0xdb, 0x9b, 0xee, 0x0a, 0x01, 0xbd, 0xcd, 0xbc, 0x79, 0xef, 0xf5, 0x97,
+	0x2e, 0xf4, 0x92, 0x2c, 0xcd, 0x12, 0xb9, 0x19, 0xe7, 0x85, 0xd4, 0x12, 0xdd, 0xb4, 0xc8, 0x37,
+	0x4c, 0x43, 0x7f, 0x9d, 0xef, 0x25, 0x4f, 0x16, 0xa4, 0xf9, 0x9c, 0x6b, 0x8e, 0x08, 0xae, 0xe0,
+	0x07, 0x0a, 0x1a, 0xa1, 0x13, 0xb5, 0x63, 0x33, 0x57, 0x9a, 0xe6, 0xa9, 0x0a, 0xdc, 0xb0, 0x51,
+	0x69, 0xd5, 0x8c, 0x8f, 0x00, 0x39, 0x2f, 0x48, 0xe8, 0x77, 0xae, 0xb7, 0xc1, 0x8d, 0x71, 0x5f,
+	0x28, 0x38, 0x84, 0xd6, 0x67, 0xb6, 0xa7, 0xd5, 0x77, 0x4e, 0x81, 0x67, 0xae, 0xe7, 0x9d, 0x2d,
+	0xa1, 0x63, 0xbf, 0x3a, 0xdb, 0x96, 0x62, 0x57, 0xd5, 0x27, 0x5c, 0xf3, 0xc0, 0x09, 0x9d, 0xa8,
+	0x1b, 0x9b, 0x19, 0x9f, 0xa0, 0x75, 0xf8, 0x45, 0x0a, 0xea, 0xa1, 0x13, 0x75, 0x26, 0x83, 0x71,
+	0x45, 0x3c, 0xbe, 0xc6, 0x8d, 0xcf, 0x2e, 0xb6, 0x82, 0xae, 0xbd, 0x2d, 0x35, 0xd7, 0xa5, 0xc2,
+	0x00, 0x9a, 0x0b, 0x52, 0x8a, 0xa7, 0x64, 0x8a, 0xdb, 0xf1, 0x69, 0xc5, 0x11, 0xb8, 0x33, 0x99,
+	0x90, 0xe9, 0xed, 0x4f, 0x1e, 0x2e, 0x7b, 0x6d, 0xb6, 0xba, 0xc6, 0xc6, 0xc3, 0x6e, 0xa1, 0xf7,
+	0x52, 0xc8, 0xa3, 0xa2, 0x98, 0xbe, 0x4a, 0x52, 0x9a, 0xf9, 0xd0, 0x3f, 0x09, 0x2a, 0x97, 0x42,
+	0xd1, 0x68, 0x0a, 0xfe, 0xdf, 0x30, 0x76, 0xa0, 0xb9, 0x16, 0x3b, 0x21, 0x8f, 0xc2, 0xaf, 0xa1,
+	0x07, 0xf5, 0xb7, 0x9d, 0xef, 0x20, 0x80, 0xf7, 0xca, 0xb3, 0x3d, 0x25, 0x7e, 0x7d, 0x52, 0x42,
+	0x73, 0x9e, 0xa5, 0xd9, 0x5c, 0x6e, 0x70, 0x0a, 0x9e, 0xcd, 0xe3, 0xdd, 0x25, 0x8a, 0xf9, 0x37,
+	0x43, 0xfc, 0x4f, 0xc7, 0x6a, 0x91, 0x83, 0xcf, 0xe0, 0x59, 0x0c, 0xbc, 0xb7, 0x8e, 0x2b, 0xca,
+	0xe1, 0xe0, 0x5a, 0xb4, 0xa4, 0xac, 0xf6, 0xe1, 0x99, 0xc7, 0x9f, 0xfe, 0x04, 0x00, 0x00, 0xff,
+	0xff, 0x03, 0x25, 0x3d, 0x8f, 0x0d, 0x02, 0x00, 0x00,
 }

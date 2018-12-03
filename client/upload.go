@@ -7,6 +7,15 @@ import (
 	"google.golang.org/grpc"
 )
 
-func (c *Client) Upload(ctx context.Context, opts ...grpc.CallOption) (pb.DigiDoc_UploadClient, error) {
-	
+type UploadConfig struct {
+	ServerAddr string,
+	Filename string,
+}
+
+func Upload(cfg *UploadConfig) error {
+	c := &DigidocGrpcUploadClient {
+		ServerAddr: cfg.ServerAddr,
+		Filename: cfg.Filename,
+	}
+	c.Upload(context.Background(), cfg)
 }

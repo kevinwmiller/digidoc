@@ -11,6 +11,7 @@ func registerCommands() {
 
 	// Register commands here
 	register((&ServerCommand{}).RegisterCommands())
+	register((&UploadCommand{}).RegisterCommands())
 }
 
 func register(commands map[string]cli.CommandFactory) {

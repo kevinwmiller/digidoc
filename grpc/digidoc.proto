@@ -6,7 +6,7 @@ service DigiDoc {
 	// rpc Login (LoginRequest) returns (LoginResponse) {}
 	// rpc Logout (LogoutRequest) returns (LogoutResponse) {}
 
-	rpc Upload (UploadRequest) returns (UploadResponse) {}
+	rpc Upload (stream UploadChunk) returns (UploadStatus) {}
 	
 	rpc Browse (BrowseRequest) returns (BrowseResponse) {}
 	// rpc Find (FindRequest) returns (FindResponse) {}
@@ -36,16 +36,25 @@ message UploadMetaData {
 	string name = 3;
 	repeated string tags = 4;
 	string parentPath = 5;
+	string fileType = 6;
 }
 
-message UploadRequest {
+message UploadChunk {
 	bytes data = 1;
 	UploadMetaData metaData = 2;
 }
 
-message UploadResponse {
-	fixed64 uuid = 1;
+enum UploadStatusCode {
+        Unknown = 0;
+        Ok = 1;
+        Failed = 2;
 }
+
+message UploadStatus {
+        string Message = 1;
+        UploadStatusCode Code = 2;
+}
+
 ///////////////////////////
 
 // Browse
