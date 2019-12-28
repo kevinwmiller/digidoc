@@ -4,17 +4,15 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-var Commands map[string]cli.CommandFactory
-
-func registerCommands() {
-	Commands = map[string]cli.CommandFactory{}
+func (d *digidocCLI) registerCommands() {
+	d.commands = map[string]cli.CommandFactory{}
 
 	// Register commands here
-	register((&ServerCommand{}).RegisterCommands())
+	d.registerCommand((&ServerCommand{}).RegisterCommands())
 }
 
-func register(commands map[string]cli.CommandFactory) {
+func (d *digidocCLI) registerCommand(commands map[string]cli.CommandFactory) {
 	for k, v := range commands {
-		Commands[k] = v
+		d.commands[k] = v
 	}
 }

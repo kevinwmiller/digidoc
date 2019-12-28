@@ -6,15 +6,20 @@ import (
 	"github.com/mitchellh/cli"
 )
 
+type digidocCLI struct {
+	commands map[string]cli.CommandFactory
+}
+
 func Run(args []string) int {
 
-	registerCommands()
+	d := digidocCLI{}
+	d.registerCommands()
 
 	cli := &cli.CLI{
 		Name:     "digidoc",
 		Version:  "0.0.1",
 		Args:     args,
-		Commands: Commands,
+		Commands: d.commands,
 	}
 
 	exitCode, err := cli.Run()

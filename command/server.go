@@ -1,25 +1,22 @@
 package command
 
 import (
-	"net"
 	"strings"
 
-	"github.com/kevinwmiller/digidoc/digidoc"
+	"github.com/kevinwmiller/digidoc/server"
+
 	"github.com/mitchellh/cli"
-	"google.golang.org/grpc"
 )
 
 var _ cli.Command = (*ServerCommand)(nil)
 
 type ServerCommand struct {
-	Listener net.Listener
-	Server   *grpc.Server
-	Digidoc  *digidoc.Digidoc
+	s *server.Server
 }
 
 func (c *ServerCommand) RegisterCommands() map[string]cli.CommandFactory {
 	serverCommand := &ServerCommand{
-		Listener: nil,
+		s: &server.Server{},
 	}
 
 	serverCommands := map[string]cli.CommandFactory{
@@ -37,7 +34,7 @@ func (c *ServerCommand) RegisterCommands() map[string]cli.CommandFactory {
 
 func (c *ServerCommand) Help() string {
 	helpText := `
-Usage: digidoc server <command>
+  Usage: digidoc server <command>
 
   This command manages the Digidoc server.
 
