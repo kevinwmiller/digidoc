@@ -24,7 +24,7 @@ func (c *ServerStartCommand) Help() string {
 
 func (c *ServerStartCommand) Run(args []string) int {
 	c.ServerCommand.s.Start(&server.ServerOptions{
-		Port: 3000,
+		Port: 8080,
 	})
 	return 0
 }

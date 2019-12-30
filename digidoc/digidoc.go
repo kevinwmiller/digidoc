@@ -5,6 +5,7 @@ import (
 )
 
 type Digidoc struct {
+
 	// Database connection
 	// config
 }
