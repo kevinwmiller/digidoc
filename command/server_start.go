@@ -2,8 +2,6 @@ package command
 
 import (
 	"strings"
-
-	"github.com/kevinwmiller/digidoc/server"
 )
 
 type ServerStartCommand struct {
@@ -23,9 +21,7 @@ func (c *ServerStartCommand) Help() string {
 }
 
 func (c *ServerStartCommand) Run(args []string) int {
-	c.ServerCommand.s.Start(&server.ServerOptions{
-		Port: 8080,
-	})
+	c.ServerCommand.s.Start()
 	return 0
 }
 

@@ -16,7 +16,7 @@ type ServerCommand struct {
 
 func (c *ServerCommand) RegisterCommands() map[string]cli.CommandFactory {
 	serverCommand := &ServerCommand{
-		s: &server.Server{},
+		s: server.New(),
 	}
 
 	serverCommands := map[string]cli.CommandFactory{

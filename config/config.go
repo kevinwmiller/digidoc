@@ -29,6 +29,9 @@ type Configuration struct {
 	Domain          string
 	AllowableOrigin string
 
+	Address string
+	Port    int32
+
 	DBHost     string
 	DBPort     int32
 	DBName     string
@@ -53,7 +56,8 @@ type Configuration struct {
 
 	TestDatabaseConnection string
 
-	TimeoutInSeconds time.Duration
+	ReadTimeoutInSeconds  time.Duration
+	WriteTimeoutInSeconds time.Duration
 }
 
 // LoadConfig loads the toml file located in the given path with the given basename
@@ -66,6 +70,9 @@ func LoadConfig(path string, configFileName string) *Configuration {
 	config.SetDefault("MODE", DefaultMode)
 	config.SetDefault("DOMAIN", "https://digidocapp.com")
 	config.SetDefault("ALLOWABLE_ORIGIN", "digidocapp.com")
+
+	config.SetDefault("ADDRESS", "127.0.0.1")
+	config.SetDefault("PORT", "8080")
 
 	config.SetDefault("DB_HOST", "http://localhost")
 	config.SetDefault("DB_PORT", "5432")
@@ -91,7 +98,8 @@ func LoadConfig(path string, configFileName string) *Configuration {
 	config.SetDefault("POSTMARK_SERVER_TOKEN", "POSTMARK_API_TEST")
 	config.SetDefault("POSTMARK_ACCOUNT_TOKEN", "POSTMARK_API_TEST")
 
-	config.SetDefault("TIMEOUT_IN_SECONDS", "15")
+	config.SetDefault("READ_TIMEOUT_IN_SECONDS", "15s")
+	config.SetDefault("WRITE_TIMEOUT_IN_SECONDS", "15s")
 
 	// Default 7 days
 	config.SetDefault("EMAIL_VERIFICATION_EXPIRES_IN", "604800s")
@@ -104,6 +112,9 @@ func LoadConfig(path string, configFileName string) *Configuration {
 		Mode:            config.GetString("MODE"),
 		Domain:          config.GetString("DOMAIN"),
 		AllowableOrigin: config.GetString("ALLOWABLE_ORIGIN"),
+
+		Address: config.GetString("ADDRESS"),
+		Port:    config.GetInt32("PORT"),
 
 		DBHost:     config.GetString("DB_HOST"),
 		DBPort:     config.GetInt32("DB_PORT"),
@@ -126,7 +137,8 @@ func LoadConfig(path string, configFileName string) *Configuration {
 		EmailVerificationExpiresIn: config.GetDuration("EMAIL_VERIFICATION_EXPIRES_IN"),
 		PasswordResetExpiresIn:     config.GetDuration("PASSWORD_RESET_EXPIRES_IN"),
 
-		TimeoutInSeconds: config.GetDuration("TIMEOUT_IN_SECONDS"),
+		ReadTimeoutInSeconds:  config.GetDuration("READ_TIMEOUT_IN_SECONDS"),
+		WriteTimeoutInSeconds: config.GetDuration("WRITE_TIMEOUT_IN_SECONDS"),
 
 		TestDatabaseConnection: fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
 			config.GetString("TEST_DB_USER"), config.GetString("TEST_DB_PASSWORD"), config.GetString("TEST_DB_HOST"),
